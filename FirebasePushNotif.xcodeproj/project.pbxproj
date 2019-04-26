@@ -20,9 +20,30 @@
 		66F6E92322719647004628F2 /* PolarBleSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F6E92022719647004628F2 /* PolarBleSdk.framework */; };
 		66F6E92422719647004628F2 /* RxAtomic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F6E92122719647004628F2 /* RxAtomic.framework */; };
 		66F6E927227196BA004628F2 /* ApiWrapperSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6E925227196BA004628F2 /* ApiWrapperSwift.swift */; };
-		66F6E928227196BA004628F2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6E926227196BA004628F2 /* ViewController.swift */; };
+		66F6E92922729A9F004628F2 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F6E91F22719647004628F2 /* RxSwift.framework */; };
+		66F6E92A22729A9F004628F2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66F6E91F22719647004628F2 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		66F6E92C22729ACA004628F2 /* RxAtomic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F6E92122719647004628F2 /* RxAtomic.framework */; };
+		66F6E92D22729ACA004628F2 /* RxAtomic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66F6E92122719647004628F2 /* RxAtomic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		66F6E92E22729AE3004628F2 /* PolarBleSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F6E92022719647004628F2 /* PolarBleSdk.framework */; };
+		66F6E92F22729AE3004628F2 /* PolarBleSdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66F6E92022719647004628F2 /* PolarBleSdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D39BB2EC99525336C9A84B38 /* Pods_FirebasePushNotif.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8D7FC97AE839F35B2C04B6A /* Pods_FirebasePushNotif.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		66F6E92B22729A9F004628F2 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				66F6E92A22729A9F004628F2 /* RxSwift.framework in Embed Frameworks */,
+				66F6E92F22729AE3004628F2 /* PolarBleSdk.framework in Embed Frameworks */,
+				66F6E92D22729ACA004628F2 /* RxAtomic.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		667B852D22717EDE00B0B63D /* FirebasePushNotif.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirebasePushNotif.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,7 +62,6 @@
 		66F6E92022719647004628F2 /* PolarBleSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PolarBleSdk.framework; sourceTree = "<group>"; };
 		66F6E92122719647004628F2 /* RxAtomic.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxAtomic.framework; sourceTree = "<group>"; };
 		66F6E925227196BA004628F2 /* ApiWrapperSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiWrapperSwift.swift; sourceTree = "<group>"; };
-		66F6E926227196BA004628F2 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = "../../../Downloads/polar-ble-sdk-master/examples/example-ios/polarBleSdkTestApp/ViewController.swift"; sourceTree = "<group>"; };
 		6C55284D57AA4F043C51DD65 /* Pods-FirebasePushNotif.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirebasePushNotif.release.xcconfig"; path = "Target Support Files/Pods-FirebasePushNotif/Pods-FirebasePushNotif.release.xcconfig"; sourceTree = "<group>"; };
 		B00A087781C35C8167BE9B9F /* Pods-FirebasePushNotif.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirebasePushNotif.debug.xcconfig"; path = "Target Support Files/Pods-FirebasePushNotif/Pods-FirebasePushNotif.debug.xcconfig"; sourceTree = "<group>"; };
 		E8D7FC97AE839F35B2C04B6A /* Pods_FirebasePushNotif.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FirebasePushNotif.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,10 +72,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66F6E92922729A9F004628F2 /* RxSwift.framework in Frameworks */,
 				66F6E92222719647004628F2 /* RxSwift.framework in Frameworks */,
 				66F6E92422719647004628F2 /* RxAtomic.framework in Frameworks */,
 				66F6E92322719647004628F2 /* PolarBleSdk.framework in Frameworks */,
+				66F6E92E22729AE3004628F2 /* PolarBleSdk.framework in Frameworks */,
 				D39BB2EC99525336C9A84B38 /* Pods_FirebasePushNotif.framework in Frameworks */,
+				66F6E92C22729ACA004628F2 /* RxAtomic.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +119,6 @@
 			children = (
 				66F6E91322719320004628F2 /* Main.storyboard */,
 				667B853022717EDE00B0B63D /* AppDelegate.swift */,
-				66F6E926227196BA004628F2 /* ViewController.swift */,
 				66F6E925227196BA004628F2 /* ApiWrapperSwift.swift */,
 				66F6E91622719321004628F2 /* BLECentralViewController.swift */,
 				66F6E91422719321004628F2 /* PeripheralTableViewCell.swift */,
@@ -132,6 +154,7 @@
 				667B852A22717EDE00B0B63D /* Frameworks */,
 				667B852B22717EDE00B0B63D /* Resources */,
 				92F127E46E66E3CB1C0082CC /* [CP] Embed Pods Frameworks */,
+				66F6E92B22729A9F004628F2 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -258,7 +281,6 @@
 				66F6E91C22719321004628F2 /* BLECentralViewController.swift in Sources */,
 				667B853122717EDE00B0B63D /* AppDelegate.swift in Sources */,
 				66F6E91B22719321004628F2 /* UartModuleViewController.swift in Sources */,
-				66F6E928227196BA004628F2 /* ViewController.swift in Sources */,
 				66F6E91A22719321004628F2 /* PeripheralTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

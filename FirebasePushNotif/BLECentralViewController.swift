@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+import PolarBleSdk
+import RxSwift
 import CoreBluetooth
 
 
@@ -17,7 +19,7 @@ var blePeripheral : CBPeripheral?
 var characteristicASCIIValue = NSString()
 
 
-class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate, UITableViewDelegate, UITableViewDataSource{
+class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate, UITableViewDelegate, UITableViewDataSource, PolarBleApiObserver, PolarBleApiPowerStateObserver, PolarBleApiDeviceHrObserver, PolarBleApiDeviceInfoObserver, PolarBleApiDeviceFeaturesObserver, PolarBleApiLogger {
     
     //Data
     var centralManager : CBCentralManager!
@@ -28,6 +30,11 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
     var characteristicValue = [CBUUID: NSData]()
     var timer = Timer()
     var characteristics = [String : CBCharacteristic]()
+    
+    // NOTICE this example utilizes all available features
+    var api = PolarBleApiDefaultImpl.polarImplementation(DispatchQueue.main, features: Features.allFeatures.rawValue)
+    var autoConnect: Disposable?
+    var deviceId = "24292429" // TODO replace this with your device id
     
     //UI
     @IBOutlet weak var baseTableView: UITableView!
@@ -46,12 +53,25 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         self.baseTableView.delegate = self
         self.baseTableView.dataSource = self
         self.baseTableView.reloadData()
+        api.observer = self
+        api.deviceHrObserver = self
+        api.deviceInfoObserver = self
+        api.powerStateObserver = self
+        api.deviceFeaturesObserver = self
+        api.logger = self
+        api.polarFilter(false)
+        NSLog("\(PolarBleApiDefaultImpl.versionInfo())")
         
         /*Our key player in this app will be our CBCentralManager. CBCentralManager objects are used to manage discovered or connected remote peripheral devices (represented by CBPeripheral objects), including scanning for, discovering, and connecting to advertising peripherals.
          */
         centralManager = CBCentralManager(delegate: self, queue: nil)
         let backButton = UIBarButtonItem(title: "Disconnect", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem = backButton
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -65,6 +85,86 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         super.viewWillDisappear(animated)
         print("Stop Scanning")
         centralManager?.stopScan()
+    }
+    
+    @IBAction func autoConnect(_ sender: Any) {
+        autoConnect?.dispose()
+        autoConnect = api.startAutoConnectToDevice(-55, service: nil, polarDeviceType: nil).subscribe{ e in
+            switch e {
+            case .completed:
+                NSLog("auto connect search complete")
+            case .error(let err):
+                NSLog("auto connect failed: \(err)")
+            }
+        }
+    }
+    
+    // PolarBleApiObserver
+    func deviceConnecting(_ polarDeviceInfo: PolarDeviceInfo) {
+        NSLog("DEVICE CONNECTING: \(polarDeviceInfo)")
+    }
+    
+    func deviceConnected(_ polarDeviceInfo: PolarDeviceInfo) {
+        NSLog("DEVICE CONNECTED: \(polarDeviceInfo)")
+        deviceId = polarDeviceInfo.deviceId
+    }
+    
+    func deviceDisconnected(_ polarDeviceInfo: PolarDeviceInfo) {
+        NSLog("DISCONNECTED: \(polarDeviceInfo)")
+    }
+    
+    // PolarBleApiDeviceInfoObserver
+    func batteryLevelReceived(_ identifier: String, batteryLevel: UInt) {
+        NSLog("battery level updated: \(batteryLevel)")
+    }
+    
+    func disInformationReceived(_ identifier: String, uuid: CBUUID, value: String) {
+        NSLog("dis info: \(uuid.uuidString) value: \(value)")
+    }
+    
+    // PolarBleApiDeviceHrObserver
+    func hrValueReceived(_ identifier: String, data: PolarHrData) {
+        NSLog("(\(identifier)) HR notification: \(data.hr) rrs: \(data.rrs) rrsMs: \(data.rrsMs) c: \(data.contact) s: \(data.contactSupported)")
+    }
+    
+    func hrFeatureReady(_ identifier: String) {
+        NSLog("HR READY")
+    }
+    
+    // PolarBleApiDeviceEcgObserver
+    func ecgFeatureReady(_ identifier: String) {
+        NSLog("ECG READY \(identifier)")
+    }
+    
+    // PolarBleApiDeviceAccelerometerObserver
+    func accFeatureReady(_ identifier: String) {
+        NSLog("ACC READY")
+    }
+    
+    func ohrPPGFeatureReady(_ identifier: String) {
+        NSLog("OHR PPG ready")
+    }
+    
+    // PolarBleApiPowerStateObserver
+    func blePowerOn() {
+        NSLog("BLE ON")
+    }
+    
+    func blePowerOff() {
+        NSLog("BLE OFF")
+    }
+    
+    // PPI
+    func ohrPPIFeatureReady(_ identifier: String) {
+        NSLog("PPI Feature ready")
+    }
+    
+    func ftpFeatureReady(_ identifier: String) {
+        NSLog("FTP ready")
+    }
+    
+    func message(_ str: String) {
+        NSLog(str)
     }
     
     /*Okay, now that we have our CBCentalManager up and running, it's time to start searching for devices. You can do this by calling the "scanForPeripherals" method.*/
@@ -101,7 +201,6 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
             centralManager?.cancelPeripheralConnection(blePeripheral!)
         }
     }
-    
     
     func restoreCentralManager() {
         //Restores Central Manager delegate if something went wrong
@@ -262,7 +361,6 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         }
     }
     
-    
     func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?) {
         print("*******************************************************")
         
@@ -281,7 +379,6 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         }
     }
     
-    
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         print("*******************************************************")
         
@@ -297,12 +394,9 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         }
     }
     
-    
-    
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("Disconnected")
     }
-    
     
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         guard error == nil else {

@@ -11,6 +11,8 @@ import UIKit
 import PolarBleSdk
 import RxSwift
 import CoreBluetooth
+import Firebase
+import UserNotificationsUI
 
 
 var txCharacteristic : CBCharacteristic?
@@ -19,7 +21,7 @@ var blePeripheral : CBPeripheral?
 var characteristicASCIIValue = NSString()
 
 
-class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate, UITableViewDelegate, UITableViewDataSource, PolarBleApiObserver, PolarBleApiPowerStateObserver, PolarBleApiDeviceHrObserver, PolarBleApiDeviceInfoObserver, PolarBleApiDeviceFeaturesObserver, PolarBleApiLogger {
+class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate, UITableViewDelegate, UITableViewDataSource, PolarBleApiObserver, PolarBleApiPowerStateObserver, PolarBleApiDeviceHrObserver, PolarBleApiDeviceInfoObserver, PolarBleApiDeviceFeaturesObserver, PolarBleApiLogger, UNUserNotificationCenterDelegate, MessagingDelegate {
     
     //Data
     var centralManager : CBCentralManager!
@@ -35,7 +37,11 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
     var api = PolarBleApiDefaultImpl.polarImplementation(DispatchQueue.main, features: Features.allFeatures.rawValue)
     var autoConnect: Disposable?
     var deviceId = "24292429" // TODO replace this with your device id
+    var hr = Int()
     
+    let gcmMessageIDKey = "gcm.message_id"
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
     //UI
     @IBOutlet weak var baseTableView: UITableView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
@@ -67,6 +73,14 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         centralManager = CBCentralManager(delegate: self, queue: nil)
         let backButton = UIBarButtonItem(title: "Disconnect", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem = backButton
+        
+        if #available(iOS 10.0, *) {
+            // For iOS 10 display notification (sent via APNS)
+            UNUserNotificationCenter.current().delegate = self
+        }
+        
+        appDelegate.registerForPushNotifications(application: UIApplication.shared)
+        Messaging.messaging().delegate = self        
     }
     
     override func didReceiveMemoryWarning() {
@@ -124,6 +138,7 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
     
     // PolarBleApiDeviceHrObserver
     func hrValueReceived(_ identifier: String, data: PolarHrData) {
+        hr = Int(data.hr)
         NSLog("(\(identifier)) HR notification: \(data.hr) rrs: \(data.rrs) rrsMs: \(data.rrsMs) c: \(data.contact) s: \(data.contactSupported)")
     }
     
@@ -253,16 +268,6 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         peripheral.delegate = self
         //Only look for services that matches transmit uuid
         peripheral.discoverServices([BLEService_UUID])
-        
-        
-        //Once connected, move to new view controller to manager incoming and outgoing data
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
-        let uartViewController = storyboard.instantiateViewController(withIdentifier: "UartModuleViewController") as! UartModuleViewController
-        
-        uartViewController.peripheral = peripheral
-        
-        navigationController?.pushViewController(uartViewController, animated: true)
     }
     
     /*
@@ -352,12 +357,9 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         
         if characteristic == rxCharacteristic {
-            if let ASCIIstring = NSString(data: characteristic.value!, encoding: String.Encoding.utf8.rawValue) {
-                characteristicASCIIValue = ASCIIstring
-                print("Value Recieved: \((characteristicASCIIValue as String))")
-                NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: nil)
-                
-            }
+            let numVal = [UInt8](characteristic.value!)[0]
+            let addedVal = numVal + 1
+            print("Value Recieved: \(String(describing: addedVal))")
         }
     }
     
@@ -463,5 +465,55 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
             self.present(alertVC, animated: true, completion: nil)
         }
     }
+    
+    // Receive displayed notifications for iOS 10 devices.
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let userInfo = notification.request.content.userInfo
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        
+        // Print message ID.
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("Message ID: \(messageID)")
+        }
+        
+        // Print full message.
+        print(userInfo)
+        
+        // Change this to your preferred presentation option
+        completionHandler([.alert])
+        print("Heart beat: \(String(describing: (hr)))")
+        
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        // Print message ID.
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("Message ID: \(messageID)")
+        }
+        
+        // Print full message.
+        print(userInfo)
+        
+        completionHandler()
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("Firebase registration token: \(fcmToken)")
+        
+        let dataDict:[String: String] = ["token": fcmToken]
+        NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
+        // TODO: If necessary send token to application server.
+        // Note: This callback is fired at each app startup and whenever a new token is generated.
+    }
+    
+    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+        print("Message Data:", remoteMessage.appData)
+    }
 }
-

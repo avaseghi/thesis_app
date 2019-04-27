@@ -13,7 +13,6 @@
 		66F6E90F22718509004628F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 66F6E90E22718509004628F2 /* GoogleService-Info.plist */; };
 		66F6E91922719321004628F2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66F6E91322719320004628F2 /* Main.storyboard */; };
 		66F6E91A22719321004628F2 /* PeripheralTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6E91422719321004628F2 /* PeripheralTableViewCell.swift */; };
-		66F6E91B22719321004628F2 /* UartModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6E91522719321004628F2 /* UartModuleViewController.swift */; };
 		66F6E91C22719321004628F2 /* BLECentralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6E91622719321004628F2 /* BLECentralViewController.swift */; };
 		66F6E91E22719321004628F2 /* UUIDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6E91822719321004628F2 /* UUIDKey.swift */; };
 		66F6E92222719647004628F2 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F6E91F22719647004628F2 /* RxSwift.framework */; };
@@ -55,7 +54,6 @@
 		66F6E91222718F28004628F2 /* FirebasePushNotif.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FirebasePushNotif.entitlements; sourceTree = "<group>"; };
 		66F6E91322719320004628F2 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		66F6E91422719321004628F2 /* PeripheralTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralTableViewCell.swift; sourceTree = "<group>"; };
-		66F6E91522719321004628F2 /* UartModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartModuleViewController.swift; sourceTree = "<group>"; };
 		66F6E91622719321004628F2 /* BLECentralViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLECentralViewController.swift; sourceTree = "<group>"; };
 		66F6E91822719321004628F2 /* UUIDKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UUIDKey.swift; sourceTree = "<group>"; };
 		66F6E91F22719647004628F2 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = "<group>"; };
@@ -122,7 +120,6 @@
 				66F6E925227196BA004628F2 /* ApiWrapperSwift.swift */,
 				66F6E91622719321004628F2 /* BLECentralViewController.swift */,
 				66F6E91422719321004628F2 /* PeripheralTableViewCell.swift */,
-				66F6E91522719321004628F2 /* UartModuleViewController.swift */,
 				66F6E91822719321004628F2 /* UUIDKey.swift */,
 				66F6E91222718F28004628F2 /* FirebasePushNotif.entitlements */,
 				667B853722717EDF00B0B63D /* Assets.xcassets */,
@@ -280,7 +277,6 @@
 				66F6E927227196BA004628F2 /* ApiWrapperSwift.swift in Sources */,
 				66F6E91C22719321004628F2 /* BLECentralViewController.swift in Sources */,
 				667B853122717EDE00B0B63D /* AppDelegate.swift in Sources */,
-				66F6E91B22719321004628F2 /* UartModuleViewController.swift in Sources */,
 				66F6E91A22719321004628F2 /* PeripheralTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

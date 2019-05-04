@@ -12,6 +12,7 @@ import PolarBleSdk
 import RxSwift
 import CoreBluetooth
 import Firebase
+import FirebaseDatabase
 import UserNotificationsUI
 
 
@@ -41,7 +42,10 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
     
     let gcmMessageIDKey = "gcm.message_id"
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-
+    
+    var db: DatabaseReference!
+    let date = Date()
+    
     //UI
     @IBOutlet weak var baseTableView: UITableView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
@@ -80,7 +84,9 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         }
         
         appDelegate.registerForPushNotifications(application: UIApplication.shared)
-        Messaging.messaging().delegate = self        
+        Messaging.messaging().delegate = self
+        
+        db = Database.database().reference()
     }
     
     override func didReceiveMemoryWarning() {
@@ -357,9 +363,11 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         
         if characteristic == rxCharacteristic {
-            let numVal = [UInt8](characteristic.value!)[0]
-            let addedVal = numVal + 1
-            print("Value Recieved: \(String(describing: addedVal))")
+            let numVal = [UInt8](characteristic.value!)            
+            if (numVal.count > 0 && numVal[0] == 1) {
+                print("Value Recieved: \(String(describing: numVal[0]))")
+//                db.childByAutoId().setValue(["date": date, "source":"embrace", "heartbeat": hr])
+            }
         }
     }
     
@@ -486,6 +494,7 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         // Change this to your preferred presentation option
         completionHandler([.alert])
         print("Heart beat: \(String(describing: (hr)))")
+        db.childByAutoId().setValue(["date": date, "source":"notification", "heartbeat": hr])
         
     }
     

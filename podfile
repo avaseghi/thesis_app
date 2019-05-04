@@ -8,4 +8,6 @@ target 'FirebasePushNotif' do
   # Pods for FirebasePushNotif
 pod 'Firebase/Core'
 pod 'Firebase/Messaging'
+pod 'Firebase/Database'
+
 end

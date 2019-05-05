@@ -19,6 +19,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        let confirmAction = UNNotificationAction(identifier: "CONFIRM_ACTION",
+                                                title: "Ok",
+                                                options:[])
+        // Define the notification type
+        let instaNotifCategory =
+            UNNotificationCategory(identifier: "INSTA_NOTIF",
+                                   actions: [confirmAction],
+                                   intentIdentifiers: [],
+                                   hiddenPreviewsBodyPlaceholder: "",
+                                   options: [])
+        // Register the notification type.
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.setNotificationCategories([instaNotifCategory])
+        
         FirebaseApp.configure()
         return true
     }

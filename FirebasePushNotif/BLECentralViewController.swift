@@ -21,7 +21,6 @@ var rxCharacteristic : CBCharacteristic?
 var blePeripheral : CBPeripheral?
 var characteristicASCIIValue = NSString()
 
-
 class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate, UITableViewDelegate, UITableViewDataSource, PolarBleApiObserver, PolarBleApiPowerStateObserver, PolarBleApiDeviceHrObserver, PolarBleApiDeviceInfoObserver, PolarBleApiDeviceFeaturesObserver, PolarBleApiLogger, UNUserNotificationCenterDelegate, MessagingDelegate {
     
     //Data
@@ -44,6 +43,7 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     var db: DatabaseReference!
+    
     let date = Date()
     
     //UI
@@ -363,10 +363,10 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         
         if characteristic == rxCharacteristic {
-            let numVal = [UInt8](characteristic.value!)            
+            let numVal = [UInt8](characteristic.value!)
             if (numVal.count > 0 && numVal[0] == 1) {
-                print("Value Recieved: \(String(describing: numVal[0]))")
-//                db.childByAutoId().setValue(["date": date, "source":"embrace", "heartbeat": hr])
+                print("Value Recieved: \(String(describing: numVal[0])) at \(String(describing: date))")
+                db.childByAutoId().setValue(["date": String(describing: date), "source":"embrace", "heartbeat": hr])
             }
         }
     }
@@ -435,7 +435,6 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         let peripheral = self.peripherals[indexPath.row]
         let RSSI = self.RSSIs[indexPath.row]
         
-        
         if peripheral.name == nil {
             cell.peripheralLabel.text = "nil"
         } else {
@@ -493,8 +492,6 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         
         // Change this to your preferred presentation option
         completionHandler([.alert])
-        print("Heart beat: \(String(describing: (hr)))")
-        db.childByAutoId().setValue(["date": date, "source":"notification", "heartbeat": hr])
         
     }
     
@@ -509,6 +506,16 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         
         // Print full message.
         print(userInfo)
+        
+        switch response.actionIdentifier {
+        case "CONFIRM_ACTION":
+            print("Heart beat: \(String(describing: (hr)))")
+            db.childByAutoId().setValue(["date": String(describing: date), "source":"notification", "heartbeat": hr])
+            break
+            
+        default:
+            break
+        }
         
         completionHandler()
     }

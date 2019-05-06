@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6606855E227F9E9400689249 /* UartModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6606855D227F9E9300689249 /* UartModuleViewController.swift */; };
 		667B853122717EDE00B0B63D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667B853022717EDE00B0B63D /* AppDelegate.swift */; };
 		667B853822717EDF00B0B63D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 667B853722717EDF00B0B63D /* Assets.xcassets */; };
 		667B853B22717EDF00B0B63D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 667B853922717EDF00B0B63D /* LaunchScreen.storyboard */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6606855D227F9E9300689249 /* UartModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartModuleViewController.swift; sourceTree = "<group>"; };
 		667B852D22717EDE00B0B63D /* FirebasePushNotif.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirebasePushNotif.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		667B853022717EDE00B0B63D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		667B853722717EDF00B0B63D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				667B853022717EDE00B0B63D /* AppDelegate.swift */,
 				66F6E925227196BA004628F2 /* ApiWrapperSwift.swift */,
 				66F6E91622719321004628F2 /* BLECentralViewController.swift */,
+				6606855D227F9E9300689249 /* UartModuleViewController.swift */,
 				66F6E91422719321004628F2 /* PeripheralTableViewCell.swift */,
 				66F6E91822719321004628F2 /* UUIDKey.swift */,
 				66F6E91222718F28004628F2 /* FirebasePushNotif.entitlements */,
@@ -279,6 +282,7 @@
 				66F6E927227196BA004628F2 /* ApiWrapperSwift.swift in Sources */,
 				66F6E91C22719321004628F2 /* BLECentralViewController.swift in Sources */,
 				667B853122717EDE00B0B63D /* AppDelegate.swift in Sources */,
+				6606855E227F9E9400689249 /* UartModuleViewController.swift in Sources */,
 				66F6E91A22719321004628F2 /* PeripheralTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

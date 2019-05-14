@@ -8,12 +8,11 @@
 
 import UIKit
 import CoreBluetooth
-import PolarBleSdk
 import Firebase
 import FirebaseDatabase
 import UserNotificationsUI
 
-class UartModuleViewController: UIViewController, CBPeripheralManagerDelegate, UITextViewDelegate, PolarBleApiDeviceHrObserver, UNUserNotificationCenterDelegate, MessagingDelegate  {
+class UartModuleViewController: UIViewController, CBPeripheralManagerDelegate, UITextViewDelegate, UNUserNotificationCenterDelegate, MessagingDelegate  {
     
     //UI
     @IBOutlet weak var physicalHR: UILabel!
@@ -24,12 +23,18 @@ class UartModuleViewController: UIViewController, CBPeripheralManagerDelegate, U
     var peripheral: CBPeripheral!
     private var consoleAsciiText:NSAttributedString? = NSAttributedString(string: "")
     
-    var hr = Int()
-    
     let gcmMessageIDKey = "gcm.message_id"
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     var db: DatabaseReference!
+    var notifHandle: DatabaseHandle?
+    var embraceHandle: DatabaseHandle?
+    var notifRate = 0
+    var embraceRate = 0
+    var notifTotal = 0
+    var embraceTotal = 0
+    var notifNum = 0
+    var embraceNum = 0
     
     let date = Date()
     
@@ -39,8 +44,6 @@ class UartModuleViewController: UIViewController, CBPeripheralManagerDelegate, U
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
         //-Notification for updating the text view with incoming text
         updateIncomingData()
-        var api = PolarBleApiDefaultImpl.polarImplementation(DispatchQueue.main, features: Features.allFeatures.rawValue)
-        api.deviceHrObserver = self
         
         if #available(iOS 10.0, *) {
             // For iOS 10 display notification (sent via APNS)
@@ -51,8 +54,42 @@ class UartModuleViewController: UIViewController, CBPeripheralManagerDelegate, U
         Messaging.messaging().delegate = self as MessagingDelegate
         
         db = Database.database().reference()
+        
+        let notif_hr = db.child("notif")
+        let embrace_hr = db.child("embrace")
+        
+        notifHandle = notif_hr.observe(.childAdded) { (snapshot) in
+            
+            let post = snapshot.value as? [String: Any]
+            
+            if let actualPost = post {
+//                print(actualPost["heartbeat"] as! Int)
+                self.notifRate += actualPost["heartbeat"] as! Int
+                self.notifNum += 1
+                print("Notif beat \(String(describing: actualPost["heartbeat"]))")
+            }
+            
+            self.notifTotal = self.notifRate/self.notifNum
+            print("Notif BPM \(self.notifRate)/\(self.notifNum) = \(self.notifRate/self.notifNum)")
+            self.digitalHR.text = "\(String(describing: self.notifTotal)) BPM"
+        }
+        
+        embraceHandle = embrace_hr.observe(.childAdded) { (snapshot) in
+            
+            let post = snapshot.value as? [String: Any]
+            
+            if let actualPost = post {
+//                print(actualPost["heartbeat"] as! Int)
+                self.embraceRate += actualPost["heartbeat"] as! Int
+                self.embraceNum += 1
+                print("Embrace beat \(String(describing: actualPost["heartbeat"]))")
+            }
+            
+            self.embraceTotal = self.embraceRate/self.embraceNum
+            print("Notif BPM \(self.embraceRate)/\(self.embraceNum) = \(self.embraceRate/self.embraceNum)")
+            self.physicalHR.text = "\(String(describing: self.embraceTotal)) BPM"
+        }
     }
-    
     
     override func viewDidDisappear(_ animated: Bool) {
         // peripheralManager?.stopAdvertising()
@@ -65,18 +102,11 @@ class UartModuleViewController: UIViewController, CBPeripheralManagerDelegate, U
     func updateIncomingData () {
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "Notify"), object: nil , queue: nil){
             notification in
-            print(numVal)
-//            if (numVal!.count > 0 && numVal?[0] == 1) {
-////                print("Value Recieved: \(String(describing: numVal[0])) at \(String(describing: date))")
-////                db.childByAutoId().setValue(["date": String(describing: date), "source":"embrace", "heartbeat": hr])
-//            }
+            if (numVal!.count > 0 && numVal?[0] == 1) {
+                print("Value Recieved: \(String(describing: numVal?[0])) at \(String(describing: self.date))")
+                self.db.child("embrace/").childByAutoId().setValue(["date": String(describing: self.date), "heartbeat": hr])
+            }
         }
-    }
-    
-    // PolarBleApiDeviceHrObserver
-    func hrValueReceived(_ identifier: String, data: PolarHrData) {
-        hr = Int(data.hr)
-        NSLog("(\(identifier)) HR notification: \(data.hr) rrs: \(data.rrs) rrsMs: \(data.rrsMs) c: \(data.contact) s: \(data.contactSupported)")
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
@@ -123,7 +153,7 @@ class UartModuleViewController: UIViewController, CBPeripheralManagerDelegate, U
         switch response.actionIdentifier {
         case "CONFIRM_ACTION":
             print("Heart beat: \(String(describing: (hr)))")
-            db.childByAutoId().setValue(["date": String(describing: date), "source":"notification", "heartbeat": hr])
+            db.child("notif/").childByAutoId().setValue(["date": String(describing: date), "heartbeat": hr])
             break
             
         default:

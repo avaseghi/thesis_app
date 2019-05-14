@@ -12,13 +12,24 @@ import PolarBleSdk
 import RxSwift
 import CoreBluetooth
 
-
 var txCharacteristic : CBCharacteristic?
 var rxCharacteristic : CBCharacteristic?
 var blePeripheral : CBPeripheral?
 var numVal : [UInt8]?
+var hr = Int()
 
-class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate, UITableViewDelegate, UITableViewDataSource, PolarBleApiObserver, PolarBleApiPowerStateObserver, PolarBleApiDeviceInfoObserver, PolarBleApiDeviceFeaturesObserver, PolarBleApiLogger{
+class BLECentralViewController :
+    UIViewController,
+    CBCentralManagerDelegate,
+    CBPeripheralDelegate,
+    UITableViewDelegate,
+    UITableViewDataSource,
+    PolarBleApiObserver,
+    PolarBleApiPowerStateObserver,
+    PolarBleApiDeviceHrObserver,
+    PolarBleApiDeviceInfoObserver,
+    PolarBleApiDeviceFeaturesObserver,
+    PolarBleApiLogger {
     
     //Data
     var centralManager : CBCentralManager!
@@ -52,6 +63,7 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         self.baseTableView.dataSource = self
         self.baseTableView.reloadData()
         api.observer = self
+        api.deviceHrObserver = self
         api.deviceInfoObserver = self
         api.powerStateObserver = self
         api.deviceFeaturesObserver = self
@@ -94,6 +106,12 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
                 NSLog("auto connect failed: \(err)")
             }
         }
+    }
+    
+    // PolarBleApiDeviceHrObserver
+    func hrValueReceived(_ identifier: String, data: PolarHrData) {
+        hr = Int(data.hr)
+        NSLog("(\(identifier)) HR notification: \(data.hr) rrs: \(data.rrs) rrsMs: \(data.rrsMs) c: \(data.contact) s: \(data.contactSupported)")
     }
     
     // PolarBleApiObserver

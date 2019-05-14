@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		66042433228A6CFE0033A23B /* human-heart-icon-png-7.png in Resources */ = {isa = PBXBuildFile; fileRef = 66042432228A6CFE0033A23B /* human-heart-icon-png-7.png */; };
+		6604243D228A91CB0033A23B /* 994902_black-heart-icon-png.png in Resources */ = {isa = PBXBuildFile; fileRef = 6604243C228A91CB0033A23B /* 994902_black-heart-icon-png.png */; };
 		6606855E227F9E9400689249 /* UartModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6606855D227F9E9300689249 /* UartModuleViewController.swift */; };
 		667B853122717EDE00B0B63D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667B853022717EDE00B0B63D /* AppDelegate.swift */; };
 		667B853822717EDF00B0B63D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 667B853722717EDF00B0B63D /* Assets.xcassets */; };
@@ -46,6 +48,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		66042432228A6CFE0033A23B /* human-heart-icon-png-7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "human-heart-icon-png-7.png"; path = "../../../Downloads/human-heart-icon-png-7.png"; sourceTree = "<group>"; };
+		6604243C228A91CB0033A23B /* 994902_black-heart-icon-png.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "994902_black-heart-icon-png.png"; path = "../../../Downloads/994902_black-heart-icon-png.png"; sourceTree = "<group>"; };
 		6606855D227F9E9300689249 /* UartModuleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartModuleViewController.swift; sourceTree = "<group>"; };
 		667B852D22717EDE00B0B63D /* FirebasePushNotif.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirebasePushNotif.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		667B853022717EDE00B0B63D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -126,6 +130,8 @@
 				66F6E91822719321004628F2 /* UUIDKey.swift */,
 				66F6E91222718F28004628F2 /* FirebasePushNotif.entitlements */,
 				667B853722717EDF00B0B63D /* Assets.xcassets */,
+				6604243C228A91CB0033A23B /* 994902_black-heart-icon-png.png */,
+				66042432228A6CFE0033A23B /* human-heart-icon-png-7.png */,
 				667B853922717EDF00B0B63D /* LaunchScreen.storyboard */,
 				667B853C22717EDF00B0B63D /* Info.plist */,
 				66F6E90E22718509004628F2 /* GoogleService-Info.plist */,
@@ -215,6 +221,8 @@
 				66F6E91922719321004628F2 /* Main.storyboard in Resources */,
 				66F6E90F22718509004628F2 /* GoogleService-Info.plist in Resources */,
 				667B853822717EDF00B0B63D /* Assets.xcassets in Resources */,
+				6604243D228A91CB0033A23B /* 994902_black-heart-icon-png.png in Resources */,
+				66042433228A6CFE0033A23B /* human-heart-icon-png-7.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

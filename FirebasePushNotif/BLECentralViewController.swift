@@ -73,6 +73,7 @@ class BLECentralViewController :
         
         /*Our key player in this app will be our CBCentralManager. CBCentralManager objects are used to manage discovered or connected remote peripheral devices (represented by CBPeripheral objects), including scanning for, discovering, and connecting to advertising peripherals.
          */
+        
         centralManager = CBCentralManager(delegate: self, queue: nil)
         let backButton = UIBarButtonItem(title: "Disconnect", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem = backButton
@@ -220,7 +221,7 @@ class BLECentralViewController :
     /*
      Called when the central manager discovers a peripheral while scanning. Also, once peripheral is connected, cancel scanning.
      */
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,advertisementData: [String : Any], rssi RSSI: NSNumber) {
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
         blePeripheral = peripheral
         self.peripherals.append(peripheral)

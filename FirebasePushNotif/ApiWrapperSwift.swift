@@ -1,4 +1,3 @@
-
 import Foundation
 import PolarBleSdk
 import RxSwift
@@ -95,11 +94,15 @@ import RxSwift
     }
     
     @objc func connectToPolarDevice(_ identifier: String) {
-        self.api.connectToDevice(identifier)
+        do{
+            try self.api.connectToDevice(identifier)
+        } catch {}
     }
     
     @objc func disconnectFromPolarDevice(_ identifier: String) {
-        self.api.disconnectFromDevice(identifier)
+        do{
+            try self.api.disconnectFromDevice(identifier)
+        } catch {}
     }
     
     @objc func isFeatureReady(_ identifier: String, feature: Int) -> Bool {
